@@ -1,0 +1,30 @@
+{
+  "name": "winsc",
+  "version": "1.0.1",
+  "description": "Windows Service Controller for NodeJs. Install/uninstall, start/stop and verify existence of a Windows service. Print out the current status of the service and list all services available on local machine.",
+  "main": "./src/winsc.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maurobussini/winsc.git"
+  },
+  "keywords": [
+    "windows",
+    "service",
+    "controller",
+    "sc.exe",
+    "install",
+    "uninstall",
+    "stop",
+    "start", 
+    "status"
+  ],
+  "author": "maurobussini",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maurobussini/winsc/issues"
+  },
+  "homepage": "https://github.com/maurobussini/winsc#readme"
+}
