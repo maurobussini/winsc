@@ -1,3 +1,9 @@
+# Visual Studio Code
+.vscode
+
+# Development Samples
+dev-samples
+
 # Logs
 logs
 *.log

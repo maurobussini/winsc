@@ -2,7 +2,8 @@ winsc - Windows Service Controller for NodeJs
 ======
 Windows Service Controller for NodeJs. Install/uninstall, start/stop and verify existence of a Windows service. Print out the current status of the service and list all services available on local machine.
 
-Disclaimer! This module works on Microsoft Windows machines only
+| This module works on Microsoft Windows machines only |
+| --- |
 
 ## Install NPM
 
@@ -29,6 +30,13 @@ Check existence of provide service name
 let doesExists = await winsc.exists('ServiceOne');
 
 // doesExists => true/false
+```
+
+Get status of the service using its name
+```javascript
+let serviceStatus = await winsc.status('ServiceOne');
+
+// serviceStatus => "RUNNING" or "STOPPED"
 ```
 
 Install the service providing name, deescription and executable path
@@ -62,10 +70,7 @@ let wasStopped = await winsc.stop('ServiceOne');
 // wasStopped => true/false
 ```
 
-Get status of the service using its name
-```javascript
-let serviceStatus = await winsc.status('ServiceOne');
+| Attention! Install, uninstall, start and stop require administrative privileges! |
+| --- |
 
-// serviceStatus => "RUNNING" or "STOPPED"
-```
 Enjoy...

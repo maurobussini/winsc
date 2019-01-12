@@ -102,7 +102,7 @@ function stop(serviceName) {
 
                     //On error, reject and exit
                     if (err){
-                        return reject(err);
+                        return reject(new Error(stdout));
                     }
 
                     //Get all lines on standard output, take only
@@ -157,7 +157,7 @@ function start(serviceName) {
 
                     //On error, reject and exit
                     if (err){
-                        return reject(err);
+                        return reject(new Error(stdout));
                     }
 
                     //Get all lines on standard output, take only
@@ -212,7 +212,7 @@ function uninstall(serviceName) {
 
                     //On error, reject and exit
                     if (err){
-                        return reject(err);
+                        return reject(new Error(stdout));
                     }
 
                     //Get all lines on standard output, take only
@@ -281,7 +281,7 @@ function install(serviceName, displayName, exeFilePath) {
 
                     //On error, reject and exit
                     if (err){
-                        return reject(err);
+                        return reject(new Error(stdout));
                     }
 
                     //Get all lines on standard output, take only
