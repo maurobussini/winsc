@@ -36,9 +36,9 @@ function status(serviceName) {
                 if (!alreadyExists){
                     return reject("Service with name '" + serviceName + "' does not exists");
                 }
-
+                
                 //Run command for create service with provided data
-                exec("sc.exe query " + serviceName, (err, stdout) => {
+                exec("sc.exe query \"" + serviceName + "\"", (err, stdout) => {
 
                     //On error, reject and exit
                     if (err){
@@ -98,7 +98,7 @@ function stop(serviceName) {
                 }
 
                 //Run command for create service with provided data
-                exec("sc.exe stop " + serviceName, (err, stdout) => {
+                exec("sc.exe stop \"" + serviceName + "\"", (err, stdout) => {
 
                     //On error, reject and exit
                     if (err){
@@ -151,9 +151,9 @@ function start(serviceName) {
                 if (!alreadyExists){
                     return reject("Service with name '" + serviceName + "' does not exists");
                 }
-
+                
                 //Run command for create service with provided data
-                exec("sc.exe start " + serviceName, (err, stdout) => {
+                exec("sc.exe start \"" + serviceName + "\"", (err, stdout) => {
 
                     //On error, reject and exit
                     if (err){
@@ -207,8 +207,8 @@ function uninstall(serviceName) {
                     return reject("Service with name '" + serviceName + "' does not exists");
                 }
 
-                //Run command for create service with provided data
-                exec("sc.exe delete " + serviceName, (err, stdout) => {
+                //Run command for create service with provided data                
+                exec("sc.exe delete \"" + serviceName + "\"", (err, stdout) => {
 
                     //On error, reject and exit
                     if (err){
@@ -275,9 +275,9 @@ function install(serviceName, displayName, exeFilePath) {
                 }
 
                 //Run command for create service with provided data
-                exec("sc.exe create " + serviceName + " " + 
-                "displayname=\"" + displayName  + "\" " + 
-                "binpath=\"" + exeFilePath + "\"", (err, stdout) => {
+                exec("sc.exe create \"" + serviceName + "\" " + 
+                    "displayname=\"" + displayName  + "\" " + 
+                    "binpath=\"" + exeFilePath + "\"", (err, stdout) => {
 
                     //On error, reject and exit
                     if (err){

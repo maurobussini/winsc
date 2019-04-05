@@ -39,6 +39,9 @@ let serviceStatus = await winsc.status('ServiceOne');
 // serviceStatus => "RUNNING" or "STOPPED"
 ```
 
+| Attention! Install, uninstall, start and stop require administrative privileges! |
+| --- |
+
 Install the service providing name, deescription and executable path
 ```javascript
 let wasInstalled = await winsc.install(
@@ -70,7 +73,25 @@ let wasStopped = await winsc.stop('ServiceOne');
 // wasStopped => true/false
 ```
 
-| Attention! Install, uninstall, start and stop require administrative privileges! |
-| --- |
+## Provided working sample
+
+Inside folder **sample** you will find a sample of Windows Service created using .NET Framework 4.7.2. In order to try "winsc" please **build** the .NET application (using Visual Studio 2017/2019).
+
+The Windows Service executable file will be generated in 
+*.\sample\SampleWindowsService\SampleWindowsService\bin\Debug\SampleWindowsService.exe*. Please check its existence before proceed.
+
+Then run with **administrative privileges** from the project **root** folder the following commands on console.
+
+For install the new service:
+
+```console
+node ./sample/sample-install.js install
+```
+
+For uninstall the service, run the following command:
+
+```console
+node ./sample/sample-install.js uninstall
+```
 
 Enjoy...

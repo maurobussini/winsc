@@ -2,7 +2,9 @@
 .vscode
 
 # Development Samples
-dev-samples
+sample/SampleWindowsService/.vs
+sample/SampleWindowsService/SampleWindowsService/bin
+sample/SampleWindowsService/SampleWindowsService/obj
 
 # Logs
 logs
