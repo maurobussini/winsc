@@ -26,6 +26,12 @@
   "bugs": {
     "url": "https://github.com/maurobussini/winsc/issues"
   },
+  "ava": {
+    "files": [
+      "test/**/*"
+    ],
+    "verbose": true
+  },
   "homepage": "https://github.com/maurobussini/winsc#readme",
   "devDependencies": {
     "ava": "^3.10.1"
