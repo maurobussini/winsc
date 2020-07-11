@@ -4,7 +4,7 @@
   "description": "Windows Service Controller for NodeJs. Install/uninstall, start/stop and verify existence of a Windows service. Print out the current status of the service and list all services available on local machine.",
   "main": "./src/winsc.js",
   "scripts": {
-    "test": "ava"
+    "test": "nyc ava"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/maurobussini/winsc#readme",
   "devDependencies": {
-    "ava": "^3.10.1"
+    "ava": "^3.10.1",
+    "nyc": "^15.1.0"
   }
 }
