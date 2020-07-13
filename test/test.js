@@ -1,5 +1,10 @@
+const ExecMock = {};
+
+const Proxy = require('proxyquire');
+const Sinon = require('sinon');
 const test = require('ava');
-const WinSC = require('../src/winsc.js');
+const WinSC = Proxy('../src/winsc.js', { 'exec': ExecMock });
+
 const RealService = 'QWAVE';
 const FakeService = 'imaginary-service';
 const TestService = 'TestService';
