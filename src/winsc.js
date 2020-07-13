@@ -8,25 +8,9 @@ module.exports = {
     install: install, 
     uninstall: uninstall, 
     stop: stop, 
-    start: start, 
+    start: start,
+    startup: startup,
     status: status
-};
-
-function startTypeName(type) {
-  
-   switch (type) {
-      case '2':
-         return 'Automatic';
-         break;
-      case '3':
-         return 'Manual';
-         break;
-      case '4':
-         return 'Disabled';
-         break;
-      default:
-         return 'Unknown';
-   };
 };
 
 /**
@@ -141,6 +125,25 @@ function details(serviceName) {
                   let lines = stdout.toString()
                      .split("\r\n");
                 
+                  let startTypeName = '';
+  
+                  switch (startTypeRegex
+                        .exec(lines.find((line) => {
+                           return line.indexOf('START_TYPE') !== -1;
+                     }))[0]) {
+                     case '2':
+                        startTypeName = 'Automatic';
+                        break;
+                     case '3':
+                        startTypeName = 'Manual';
+                        break;
+                     case '4':
+                        StartTypeName = 'Disabled';
+                        break;
+                     default:
+                        return 'Unknown';
+                  };
+
                   return resolve({
                      name: lines.find((line) => {
                         return line.indexOf('SERVICE_NAME: ') !== -1;
@@ -150,10 +153,7 @@ function details(serviceName) {
                         return line.indexOf('DISPLAY_NAME') !== -1;
                      }).replace(/\s*DISPLAY_NAME\s*: /, ''),
                      
-                     startType: startTypeName(startTypeRegex
-                        .exec(lines.find((line) => {
-                           return line.indexOf('START_TYPE') !== -1;
-                     }))[0]),
+                     startType: startTypeName,
                      
                      exePath: lines.find((line) => {
                         return line.indexOf('BINARY_PATH_NAME') !== -1;
@@ -170,6 +170,74 @@ function details(serviceName) {
           (err) => reject(err)
        );
        
+    });
+}
+
+/**
+ * Set start type of service provided to value provided
+ * @param {string} serviceName Name of service
+ * @param {string} startType Name of start up type
+ */
+function startup(serviceName, startType) {
+
+    //Create promise
+    return new Promise((resolve, reject) => {
+
+        //With invalid service name, reject
+        if (!serviceName){
+            reject(new Error('Service name is invalid'));
+            return;
+        }
+
+        //Check existence
+        exists(serviceName).then(
+
+            //Existence check completed
+            (alreadyExists) => {
+               
+                let st = '';
+                
+                switch(startType) {
+                   case 'Automatic':
+                     st = 'auto';
+                     break;
+                   case 'Disabled':
+                     st = 'disabled';
+                     break;
+                   case 'Manual':
+                     st = 'demand';
+                     break;
+                   default:
+                     st = 'demand';
+                     break;
+                }
+               
+                //If exists, reject
+                if (!alreadyExists){
+                    return reject("Service with name '" + serviceName + "' does not exists");
+                }
+                
+                //Run command for create service with provided data
+                exec("sc.exe config \"" + serviceName + "\" start= " + st, (err, stdout) => {
+
+                    //On error, reject and exit
+                    if (err){
+                        return reject(err);
+                    }
+
+                    if (stdout.indexOf('SUCCESS') !== -1) {
+                       return resolve(true);
+                    } else {
+                       return resolve(false);
+                    }
+                });
+
+            }, 
+
+            //Reject on error
+            (err) => reject(err)
+        );
+
     });
 }
 

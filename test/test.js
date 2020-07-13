@@ -178,6 +178,89 @@ test.serial('details rejects if the call to sc.exe through exec throws an error'
   WinSC.__set__('exec', baseExec);
 });
 
+test.serial('startup returns true if the service exists and can be configurted', async (t) => {
+
+   await WinSC.details(RealService).then(async (details) => {
+      if (details.startType === 'Automatic') {
+         await WinSC.startup(RealService, 'Manual');
+      }
+   });
+   
+   await WinSC.startup(RealService, 'Automatic').then((configured) => {
+     t.truthy(configured); 
+   }).catch((err) => {
+      console.error(err);
+      t.fail();
+   });
+   
+   await WinSC.startup(RealService, 'Disabled').then((configured) => {
+     t.truthy(configured); 
+   }).catch((err) => {
+      console.error(err);
+      t.fail();
+   });
+   
+   await WinSC.startup(RealService, 'Manual').then((configured) => {
+     t.truthy(configured); 
+   }).catch((err) => {
+      console.error(err);
+      t.fail();
+   });
+});
+
+test.serial('startup returns true and sets the service to manual if no appropriate startup type name is passed', async (t) => {
+
+   await WinSC.details(RealService).then(async (details) => {
+      if (details.startType === 'Manual') {
+         await WinSC.startup(RealService, 'Automatic');
+      }
+   });
+   
+   await WinSC.startup(RealService, null).then(async (configured) => {
+      t.truthy(configured);
+      await WinSC.details(RealService).then((details) => {
+         t.is(details.startType, 'Manual');
+      });
+   }).catch((err) => {
+      console.error(err);
+      t.fail();
+   });
+});
+
+test.serial('startup rejects if the service name does not exist', async (t) => {
+   
+   await WinSC.startup(FakeService, 'Automatic').catch((err) => {
+      t.not(err, null);
+      t.is(err, 'Service with name \'imaginary-service\' does not exists');
+   });
+});
+
+test.serial('startup rejects if an invalid service name is provided', async (t) => {
+   
+   await WinSC.startup(null, 'Automatic').catch((err) => {
+      t.is(err.message, 'Service name is invalid');
+   });
+});
+
+test.serial('startup rejects if the call to sc.exe through exec throws an error', async (t) => {
+  
+  let testErr = new Error('Error');
+  
+  WinSC.__set__('exec', Sinon.stub().throws());
+  
+  await WinSC.startup(FakeService, 'Automatic').catch((err) => {
+    t.is(err.message, 'Error');
+  });
+  
+  WinSC.__set__('exec', baseExec);
+  WinSC.__set__('exec', Sinon.stub().yields([testErr, 'huh']));
+  
+  await WinSC.startup(TestService, 'Automatic').catch((err) => {
+    t.is(err[1], 'huh');
+  });
+  
+  WinSC.__set__('exec', baseExec);
+});
 
 test.serial('start returns true if the service exists and can be started', async (t) => {
   
