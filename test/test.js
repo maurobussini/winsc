@@ -127,6 +127,58 @@ test.serial('status rejects if an invalid service name is provided', async (t) =
   });
 });
 
+test.serial('details returns an object with details on the service', async (t) => {
+   
+   await WinSC.details(RealService).then((details) => {
+      t.not(details.name, null);
+      t.is(typeof(details.name), 'string');
+      t.not(details.displayName, null);
+      t.is(typeof(details.displayName), 'string');
+      t.not(details.startType, null);
+      t.is(typeof(details.startType), 'string');
+      t.not(details.exePath, null);
+      t.is(typeof(details.exePath), 'string');
+      t.not(details.dependencies, null);
+      t.truthy(Array.isArray(details.dependencies));
+   });
+});
+
+test.serial('details rejects if the service name does not exist', async (t) => {
+   
+   await WinSC.details(FakeService).catch((err) => {
+      t.not(err, null);
+      t.is(err, 'Service with name \'imaginary-service\' does not exists');
+   });
+});
+
+test.serial('details rejects if an invalid service name is provided', async (t) => {
+   
+   await WinSC.details(null).catch((err) => {
+      t.is(err.message, 'Service name is invalid');
+   });
+});
+
+test.serial('details rejects if the call to sc.exe through exec throws an error', async (t) => {
+  
+  let testErr = new Error('Error');
+  
+  WinSC.__set__('exec', Sinon.stub().throws());
+  
+  await WinSC.details(RealService).catch((err) => {
+    t.is(err.message, 'Error');
+  });
+  
+  WinSC.__set__('exec', baseExec);
+  WinSC.__set__('exec', Sinon.stub().yields(testErr));
+  
+  await WinSC.details(RealService).catch((err) => {
+    t.is(err.message, 'Error');
+  });
+  
+  WinSC.__set__('exec', baseExec);
+});
+
+
 test.serial('start returns true if the service exists and can be started', async (t) => {
   
   await WinSC.status(RealService).then(async (status) => {

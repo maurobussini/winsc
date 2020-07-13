@@ -3,12 +3,30 @@ const exec = require("child_process").exec;
 // Module schema
 module.exports = {
     all: all, 
+    details: details,
     exists: exists, 
     install: install, 
     uninstall: uninstall, 
     stop: stop, 
     start: start, 
     status: status
+};
+
+function startTypeName(type) {
+  
+   switch (type) {
+      case '2':
+         return 'Automatic';
+         break;
+      case '3':
+         return 'Manual';
+         break;
+      case '4':
+         return 'Disabled';
+         break;
+      default:
+         return 'Unknown';
+   };
 };
 
 /**
@@ -68,6 +86,90 @@ function status(serviceName) {
             (err) => reject(err)
         );
 
+    });
+}
+
+/**
+* Get the details of provided service on local machine
+* @param {string} serviceName Name of service
+*/
+function details(serviceName) {
+  
+    //Create promise
+    return new Promise((resolve, reject) => {
+
+       //With invalid service name, reject
+       if (!serviceName){
+           reject(new Error('Service name is invalid'));
+           return;
+       }
+       
+       //Run check for service existance
+       exists(serviceName).then(
+         
+          //Existance check completed
+          (alreadyExists) => {
+
+             //If exists, reject
+             if (!alreadyExists){
+                 return reject("Service with name '" + serviceName + "' does not exists");
+             }
+             
+             //Run command to get service details with provided data
+             exec("sc.exe qc \"" + serviceName + "\"", (err, stdout) => {
+                  
+                  let i = 0;
+                  let startTypeRegex = new RegExp(/\d/);
+                  let dependenciesRegex = new RegExp(/(?<=\s*DEPENDENCIES)(\s*:.*\r\n)*/);
+                
+                  let deps = dependenciesRegex.exec(stdout)[0]
+                     .toString()
+                     .split('\r\n');
+                
+                  for(i = 0; i < deps.length; ++i) {
+                     deps[i] = deps[i].replace(/\s*: /, '');
+                     if (deps[i] === '') {
+                        deps.splice(i, 1);
+                     }
+                  }
+                
+                  //On error, reject and exit
+                  if (err){
+                     return reject(err);
+                  }
+                
+                  let lines = stdout.toString()
+                     .split("\r\n");
+                
+                  return resolve({
+                     name: lines.find((line) => {
+                        return line.indexOf('SERVICE_NAME: ') !== -1;
+                     }).replace('SERVICE_NAME: ', ''),
+                     
+                     displayName: lines.find((line) => {
+                        return line.indexOf('DISPLAY_NAME') !== -1;
+                     }).replace(/\s*DISPLAY_NAME\s*: /, ''),
+                     
+                     startType: startTypeName(startTypeRegex
+                        .exec(lines.find((line) => {
+                           return line.indexOf('START_TYPE') !== -1;
+                     }))[0]),
+                     
+                     exePath: lines.find((line) => {
+                        return line.indexOf('BINARY_PATH_NAME') !== -1;
+                     }).replace(/\s*BINARY_PATH_NAME\s*: /, ''),
+                     
+                     dependencies: deps
+                  });
+                  
+             });
+             
+          },
+          
+          //Reject on error
+          (err) => reject(err)
+       );
+       
     });
 }
 
