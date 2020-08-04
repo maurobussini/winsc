@@ -39,6 +39,19 @@ let serviceStatus = await winsc.status('ServiceOne');
 // serviceStatus => "RUNNING" or "STOPPED"
 ```
 
+Get details of a given service using its name
+```javascript
+let serviceDetails = await winsc.details('ServiceOne');
+
+// serviceDetails => {
+//   name: "ServiceOne",
+//   displayName: "Service One",
+//   startType: "Automatic",
+//   exePath: "C:\Windows\System32\serviceone.exe"
+//   dependencies: []
+// }
+```
+
 | Attention! Install, uninstall, start and stop require administrative privileges! |
 | --- |
 
