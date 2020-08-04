@@ -39,7 +39,7 @@ let serviceStatus = await winsc.status('ServiceOne');
 // serviceStatus => "RUNNING" or "STOPPED"
 ```
 
-| Attention! Install, uninstall, start and stop require administrative privileges! |
+| Attention! Install, uninstall, start, stop and startup require administrative privileges! |
 | --- |
 
 Install the service providing name, deescription and executable path
@@ -71,6 +71,14 @@ Stop a running service
 let wasStopped = await winsc.stop('ServiceOne');
 
 // wasStopped => true/false
+```
+
+Set the startup type of a service by name
+```javascript
+let startupChanged = await winsc.startup('ServiceOne', 'Automatic');
+
+// startupChanged => true/false
+// startup type can be 'Automatic', 'Disabled' or 'Manual'
 ```
 
 ## Provided working sample
