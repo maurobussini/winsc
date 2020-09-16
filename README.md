@@ -2,6 +2,7 @@ winsc - Windows Service Controller for NodeJs
 ======
 Windows Service Controller for NodeJs. Install/uninstall, start/stop and verify existence of a Windows service. Print out the current status of the service and list all services available on local machine.
 
+
 | This module works on Microsoft Windows machines only |
 | --- |
 
@@ -116,3 +117,5 @@ node ./sample/sample-install.js uninstall
 ```
 
 Enjoy...
+
+**PS: Thanks to WebMatrixware for the the latest improvements ;)**
