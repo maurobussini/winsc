@@ -53,7 +53,6 @@ let serviceDetails = await winsc.details('ServiceOne');
 ```
 
 | Attention! Install, uninstall, start, stop and startup require administrative privileges! |
-=======
 | --- |
 
 Install the service providing name, deescription and executable path
